@@ -1,0 +1,66 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:maps="clr-namespace:Microsoft.Maui.Controls.Maps;assembly=Microsoft.Maui.Controls.Maps"
+             xmlns:sensors="clr-namespace:Microsoft.Maui.Devices.Sensors;assembly=Microsoft.Maui.Essentials"
+             xmlns:MVVMToolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
+             x:Class="Map_POC.MainPage"
+             xmlns:app ="clr-namespace:Map_POC"
+             x:DataType="app:MapViewModel"
+              >
+
+    <maps:Map IsShowingUser ="True" IsTrafficEnabled="true" ItemsSource="{Binding Pins}" 
+              ItemTemplateSelector="{StaticResource MapItemTemplateSelector}">
+        <x:Arguments>
+            <MapSpan>
+                <x:Arguments>
+                    <sensors:Location>
+                        <x:Arguments>
+                            <x:Double>36.9628066</x:Double>
+                            <x:Double>-122.0194722</x:Double>
+                        </x:Arguments>
+                    </sensors:Location>
+                    <x:Double>0.01</x:Double>
+                    <x:Double>0.01</x:Double>
+                </x:Arguments>
+            </MapSpan>
+        </x:Arguments>
+        <Map.Behaviors>
+            <MVVMToolkit:EventToCommandBehavior
+                            x:TypeArguments="MapClickedEventArgs"
+                            EventName="MapClicked"
+                            Command="{Binding MapClickedCommand}" />
+        </Map.Behaviors>
+
+    </maps:Map>
+
+    <ContentPage.Resources>
+        <app:MapItemTemplateSelector x:Key="MapItemTemplateSelector">
+            <app:MapItemTemplateSelector.EvenTemplate>
+                <DataTemplate x:DataType="app:PinModel">
+                    <app:CustomPin 
+                        Label="{Binding Label}"
+                        Location="{Binding Location}"
+                        Address="{Binding Address}"
+                        ImageSource="{Binding ImageSource}"
+                        Type="Generic"
+                        MarkerClicked ="OnMarkerClicked"
+                        InfoWindowClicked="OnInfoWindowClicked"/>
+                </DataTemplate>
+            </app:MapItemTemplateSelector.EvenTemplate>
+            <app:MapItemTemplateSelector.OddTemplate>
+                <DataTemplate x:DataType="app:PinModel">
+                    <app:CustomPin
+                        Label="{Binding ID}"
+                        Location="{Binding Location}"
+                        Address="{Binding Address}"
+                        ImageSource="{Binding ImageSource}"
+                        Type="Place"
+                        MarkerClicked ="OnMarkerClicked"
+                        InfoWindowClicked="OnInfoWindowClicked"/>
+                </DataTemplate>
+            </app:MapItemTemplateSelector.OddTemplate>
+        </app:MapItemTemplateSelector>
+    </ContentPage.Resources>
+
+</ContentPage>
